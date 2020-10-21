@@ -1,0 +1,17 @@
+## Ordenado por distancia limit 5
+
+select 2 * 6371000 * asin(sqrt(pow(sin((radians(airbnb.latitude - aqicn.latitude) / 2)),2) + cos(radians(aqicn.latitude)) * cos(radians(airbnb.latitude)) * pow(sin(radians((airbnb.longitude - aqicn.longitude) / 2)), 2))) as distance from airbnb left join aqicn on aqicn.city = airbnb.city order by distance limit 5;
+
+## Ya con más parametros, ordenado por contaminación primero y luego distancia
+
+select airbnb.url, airbnb.price, aqicn.pm25 as contaminacion, aqicn.barrios, review, 2 * 6371000 * asin(sqrt(pow(sin((radians(airbnb.latitude - aqicn.latitude) / 2)),2) + cos(radians(aqicn.latitude)) * cos(radians(airbnb.latitude)) * pow(sin(radians((airbnb.longitude - aqicn.longitude) / 2)), 2))) as distance from airbnb left join aqicn on aqicn.city = airbnb.city order by contaminacion, distance limit 50;
+
+INSERT OVERWRITE DIRECTORY 'gs://bda5-keepcoding-miguel1/output/query.csv' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' select airbnb.url, airbnb.price, aqicn.pm25 as contaminacion, aqicn.barrios, 2 * 6371000 * asin(sqrt(pow(sin((radians(airbnb.latitude - aqicn.latitude) / 2)),2) + cos(radians(aqicn.latitude)) * cos(radians(airbnb.latitude)) * pow(sin(radians((airbnb.longitude - aqicn.longitude) / 2)), 2))) as distance from airbnb left join aqicn on aqicn.city = airbnb.city order by contaminacion, distance limit 50;
+
+
+## Ya un poco trabajadas 
+
+select airbnb.url, airbnb.price, aqicn.pm25 as contaminacion, aqicn.barrios, review, 2 * 6371000 * asin(sqrt(pow(sin((radians(airbnb.latitude - aqicn.latitude) / 2)),2) + cos(radians(aqicn.latitude)) * cos(radians(airbnb.latitude)) * pow(sin(radians((airbnb.longitude - aqicn.longitude) / 2)), 2))) as distance from airbnb left join aqicn on aqicn.city = airbnb.city where review >= 8 order by contaminacion, distance limit 50;
+
+
+INSERT OVERWRITE DIRECTORY 'gs://bda5-keepcoding-miguel1/output/query.csv' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' select airbnb.url, airbnb.price, aqicn.pm25 as contaminacion, aqicn.barrios, review, 2 * 6371000 * asin(sqrt(pow(sin((radians(airbnb.latitude - aqicn.latitude) / 2)),2) + cos(radians(aqicn.latitude)) * cos(radians(airbnb.latitude)) * pow(sin(radians((airbnb.longitude - aqicn.longitude) / 2)), 2))) as distance from airbnb left join aqicn on aqicn.city = airbnb.city where review >= 8 order by contaminacion, distance limit 50;
